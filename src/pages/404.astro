@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="404: Page Not Found | Muhammad Habib">
+  <div class="py-20 text-center space-y-6 max-w-lg mx-auto">
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded font-mono text-xs text-rose-500 bg-rose-500/10 border border-rose-500/20">
+      <span>ERROR: STATUS_CODE_404</span>
+    </div>
+
+    <div class="font-mono space-y-2">
+      <h1 class="text-4xl sm:text-6xl font-bold tracking-tight text-light-text dark:text-dark-text">
+        404
+      </h1>
+      <p class="text-sm sm:text-base text-light-muted dark:text-dark-muted">
+        Route not found in static routing table.
+      </p>
+    </div>
+
+    <div class="p-4 rounded-lg border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface font-mono text-xs text-left text-light-muted dark:text-dark-muted">
+      <p><span class="text-light-accent dark:text-dark-accent">❯</span> zsh: command not found: requested_url</p>
+      <p class="mt-1 text-light-muted/70 dark:text-dark-muted/70">Check URL spelling or return to root directory.</p>
+    </div>
+
+    <div>
+      <a
+        href="/"
+        class="inline-flex items-center gap-2 px-4 py-2 rounded-md font-mono text-xs font-semibold bg-light-text dark:bg-dark-text text-light-bg dark:text-dark-bg hover:opacity-90 transition-opacity"
+      >
+        <span>cd ~/home</span>
+        <span>→</span>
+      </a>
+    </div>
+  </div>
+</BaseLayout>

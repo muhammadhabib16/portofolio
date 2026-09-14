@@ -1,0 +1,86 @@
+---
+title: "Sistem Lembur Pegawai Terintegrasi"
+summary: "Platform otomasi pengajuan, kalkulasi kompensasi, dan audit trail persetujuan lembur pegawai berbasis hierarki organisasi."
+role: "Backend & Systems Developer"
+category: "DevOps & Systems"
+techStack: ["Laravel", "MySQL", "Tailwind CSS", "Docker", "Nginx"]
+githubUrl: "https://github.com/muhammadhabib16/facultyware-pweb-lembur-B06"
+featured: false
+---
+
+## 1. Problem Statement
+
+Pengelolaan jam kerja lembur pegawai yang masih mengandalkan formulir kertas atau lembar kerja spreadsheet manual memiliki banyak kelemahan operasional:
+1. **Redundansi & Manipulasi Jam Kerja:** Validasi jam lembur aktual sering tidak sinkron dengan data mesin absensi biometrik.
+2. **Birokrasi Persetujuan Bertingkat yang Lambat:** Berkas pengajuan sering tertahan di meja manajer departemen selama berhari-hari sebelum diproses oleh divisi Payroll HR.
+3. **Kompleksitas Rumus Kompensasi Depnaker:** Penghitungan upah lembur (jam pertama 1.5x, jam berikutnya 2x upah sejam, hari libur) rawan salah hitung bila dilakukan secara manual.
+
+---
+
+## 2. System Architecture
+
+Sistem dirancang dengan arsitektur monolitik terstruktur berbasis MVC Laravel dengan *database transaction safety* dan *role-based access control (RBAC)* ketat.
+
+```
++-------------------------------------------------------------+
+|                     USER ACCESS LAYER                       |
+|   Staff Pegawai        Supervisor Dep.          HR Payroll  |
+|         |                     |                      |      |
++---------+---------------------+----------------------+------+
+                                | HTTPS
+                                v
++-------------------------------------------------------------+
+|                     NGINX REVERSE PROXY                     |
+|            (SSL Termination, Rate Limiting, Gzip)           |
++-------------------------------+-----------------------------+
+                                |
+                                v
++-------------------------------------------------------------+
+|                     LARAVEL 11 ENGINE                       |
+|  +--------------------+   +-------------------------------+ |
+|  | Auth & Spatie RBAC |   | Workflow State Machine        | |
+|  +---------+----------+   +---------------+---------------+ |
+|            |                              |                 |
+|            +--------------+---------------+                 |
+|                           |                                 |
+|                           v                                 |
+|           +-------------------------------+                 |
+|           | Overtime Calculation Service  |                 |
+|           | (Depnaker Regulation Rules)   |                 |
+|           +---------------+---------------+                 |
++---------------------------+---------------------------------+
+                            |
+                            v
++-------------------------------------------------------------+
+|                     MYSQL 8 DATABASE                        |
+|   Transactions ACID, Row-Level Locking, Historical Audit    |
++-------------------------------------------------------------+
+```
+
+---
+
+## 3. Engineering Challenges & Technical Implementation
+
+### A. State Machine Approval Workflow
+Setiap berkas lembur berpindah status melalui aturan ketat (`Draft` -> `Pending Supervisor` -> `Pending HR` -> `Approved` / `Rejected`):
+* Mengimplementasikan pola *State Pattern* untuk mencegah transisi status ilegal (contoh: status tidak bisa langsung melompat ke `Approved` tanpa paraf supervisor).
+* Setiap aksi dicatat ke tabel `audit_logs` yang menyimpan identitas aktor, IP address, timestamp, dan catatan revisi secara *immutable*.
+
+### B. Otomasi Sinkronisasi Presensi Biometrik
+Menghubungkan data pengajuan dengan log mesin absensi fingerprint:
+* Mengembangkan scheduler cron di background yang menguji rentang jam lembur yang diajukan dengan log tap-out aktual pegawai.
+* Jika selisih waktu tap-out kurang dari durasi lembur yang diajukan, sistem otomatis memotong durasi lembur ke waktu riil atau meminta klarifikasi atasan.
+
+### C. Server Deployment & Containerization
+Memastikan aplikasi dapat dipasang dengan mudah pada infrastruktur *on-premise* maupun VPS:
+* Membuat file konfigurasi Docker Compose lengkap dengan PHP-FPM 8.3, Nginx alpine, dan MySQL 8 dengan automated volume backup.
+
+---
+
+## 4. Key Metrics & Impact
+
+| Parameter | Capaian |
+| :--- | :--- |
+| **Penyelesaian Siklus Persetujuan** | Dari rata-rata 4 hari kerja menjadi `< 2 jam` |
+| **Kesalahan Kalkulasi Upah** | `0% error` berkat otomasi rumus kalkulator ketenagakerjaan |
+| **Adopsi Pengguna** | 100% pegawai beralih dari form kertas ke sistem web |

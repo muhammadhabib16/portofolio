@@ -1,0 +1,156 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import TechMatrix from '../components/TechMatrix.astro';
+import Timeline from '../components/Timeline.astro';
+import Awards from '../components/Awards.astro';
+
+// Fetch featured projects
+const allProjects = await getCollection('projects');
+const featuredProjects = allProjects
+  .filter((p) => p.data.featured)
+  .slice(0, 3);
+---
+
+<BaseLayout
+  title="Muhammad Habib | Software Engineer & Informatics Student"
+  description="Personal developer portfolio & technical case studies by Muhammad Habib. Mahasiswa Sistem Informasi Semester 5 Universitas Andalas & Software Engineer."
+>
+  <div class="space-y-16 sm:space-y-24">
+    <!-- Hero Section -->
+    <section id="about" class="space-y-6 pt-2 sm:pt-6">
+      <!-- Status Badge -->
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono text-xs">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span>Open for Internships & Software Engineering Roles</span>
+      </div>
+
+      <!-- Main Headline & Subtitle -->
+      <div class="space-y-2">
+        <h1 class="text-3xl sm:text-5xl font-bold tracking-tight text-light-text dark:text-dark-text">
+          Muhammad Habib
+        </h1>
+        <p class="text-base sm:text-xl font-medium text-light-accent dark:text-dark-accent font-mono">
+          Mahasiswa Sistem Informasi Universitas Andalas (Semester 5) & Software Engineer
+        </p>
+      </div>
+
+      <!-- Quick Bio Meta Chips from CV -->
+      <div class="flex flex-wrap items-center gap-2 font-mono text-xs text-light-muted dark:text-dark-muted">
+        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border">
+          <span class="text-light-accent dark:text-dark-accent">📍</span>
+          <span>Kota Padang, Sumatera Barat</span>
+        </span>
+        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border">
+          <span class="text-light-accent dark:text-dark-accent">🎓</span>
+          <span>Universitas Andalas (IPK 3.68 / 4.00)</span>
+        </span>
+        <a
+          href="mailto:mhabibmhabib05@gmail.com"
+          class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border hover:border-light-accent dark:hover:border-dark-accent text-light-text dark:text-dark-text transition-colors"
+        >
+          <span class="text-light-accent dark:text-dark-accent">✉️</span>
+          <span>mhabibmhabib05@gmail.com</span>
+        </a>
+      </div>
+
+      <!-- Narrative Profile (Authentic from CV) -->
+      <div class="max-w-3xl text-sm sm:text-base text-light-muted dark:text-dark-muted leading-relaxed space-y-4">
+        <p>
+          Mahasiswa Sistem Informasi semester 5 di Universitas Andalas dengan pengalaman praktis dalam 
+          pengembangan <strong class="text-light-text dark:text-dark-text font-semibold">web full-stack</strong> (<span class="font-mono text-xs text-light-accent dark:text-dark-accent">Next.js, Express, Laravel</span>), 
+          <strong class="text-light-text dark:text-dark-text font-semibold">aplikasi mobile</strong> (<span class="font-mono text-xs text-light-accent dark:text-dark-accent">Flutter</span>), 
+          RESTful API, dan deployment berbasis kontainer menggunakan <span class="font-mono text-xs text-light-accent dark:text-dark-accent">Docker</span> di lingkungan operasi Linux.
+        </p>
+        <p>
+          Memiliki fondasi algoritma yang kuat melalui pengalaman sebagai asisten laboratorium pemrograman di 
+          <strong class="text-light-text dark:text-dark-text font-semibold">Laboratorium System Development</strong>, 
+          serta berperan aktif di kesekretariatan dan sub-divisi mobile programming <strong class="text-light-text dark:text-dark-text font-semibold">UKM Neo Telemetri</strong>. 
+          Berpengalaman menangani siklus pengembangan <strong class="text-light-text dark:text-dark-text font-semibold">end-to-end</strong>, 
+          mulai dari analisis kebutuhan hingga deployment ke VPS untuk solusi berbasis data dan pemetaan spasial (GIS).
+        </p>
+      </div>
+
+      <!-- Action CTA Buttons -->
+      <div class="flex flex-wrap items-center gap-3 pt-2 font-mono text-xs sm:text-sm">
+        <a
+          href="/CV_Muhammad%20Habib.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-md font-semibold bg-light-text dark:bg-dark-text text-light-bg dark:text-dark-bg hover:opacity-90 transition-opacity shadow-sm"
+        >
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          <span>Unduh CV (PDF)</span>
+        </a>
+
+        <a
+          href="https://github.com/muhammadhabib16"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-md border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface text-light-text dark:text-dark-text hover:border-light-accent dark:hover:border-dark-accent transition-colors"
+        >
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+          </svg>
+          <span>GitHub Repositori</span>
+        </a>
+
+        <a
+          href="/projects"
+          class="inline-flex items-center gap-1.5 px-4 py-2.5 text-light-accent dark:text-dark-accent hover:underline"
+        >
+          <span>Semua Proyek</span>
+          <span>→</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Featured Projects Section -->
+    <section id="featured-projects" class="space-y-6">
+      <div class="flex items-center justify-between border-b border-light-border dark:border-dark-border pb-3">
+        <div class="flex items-center gap-2">
+          <span class="font-mono text-xs text-light-accent dark:text-dark-accent">01.</span>
+          <h2 class="font-mono text-sm uppercase tracking-wider font-semibold text-light-text dark:text-dark-text">
+            Featured_Engineering_Projects
+          </h2>
+        </div>
+
+        <a
+          href="/projects"
+          class="font-mono text-xs text-light-accent dark:text-dark-accent hover:underline flex items-center gap-1"
+        >
+          <span>View All ({allProjects.length})</span>
+          <span>→</span>
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        {featuredProjects.map((project) => (
+          <ProjectCard
+            title={project.data.title}
+            summary={project.data.summary}
+            slug={project.slug}
+            category={project.data.category}
+            role={project.data.role}
+            techStack={project.data.techStack}
+            githubUrl={project.data.githubUrl}
+            liveUrl={project.data.liveUrl}
+            featured={project.data.featured}
+          />
+        ))}
+      </div>
+    </section>
+
+    <!-- Tech Stack Matrix Section -->
+    <TechMatrix />
+
+    <!-- Experience & Leadership Timeline Section -->
+    <Timeline />
+
+    <!-- Honors & Awards Section from CV -->
+    <Awards />
+  </div>
+</BaseLayout>

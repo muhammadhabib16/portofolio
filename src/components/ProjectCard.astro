@@ -1,0 +1,117 @@
+---
+interface Props {
+  title: string;
+  summary: string;
+  slug: string;
+  category: string;
+  role: string;
+  techStack: string[];
+  githubUrl?: string;
+  liveUrl?: string;
+  featured?: boolean;
+}
+
+const {
+  title,
+  summary,
+  slug,
+  category,
+  role,
+  techStack,
+  githubUrl,
+  liveUrl,
+  featured = false,
+} = Astro.props;
+---
+
+<article
+  class="group relative flex flex-col justify-between p-5 sm:p-6 rounded-lg border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface hover:border-light-accent/50 dark:hover:border-dark-accent/50 transition-all duration-200"
+  data-category={category}
+>
+  <div>
+    <!-- Top Metadata Header: Category & Role -->
+    <div class="flex items-center justify-between gap-2 mb-3">
+      <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded font-mono text-[11px] font-medium bg-light-surface-hover dark:bg-dark-surface-hover text-light-accent dark:text-dark-accent border border-light-border dark:border-dark-border">
+        <span>#</span>
+        <span>{category}</span>
+      </span>
+
+      {featured && (
+        <span class="inline-flex items-center gap-1 text-[11px] font-mono text-amber-600 dark:text-amber-400 font-semibold">
+          <span>★</span>
+          <span>FEATURED</span>
+        </span>
+      )}
+    </div>
+
+    <!-- Title & Link to Case Study -->
+    <h3 class="text-base sm:text-lg font-semibold tracking-tight text-light-text dark:text-dark-text group-hover:text-light-accent dark:group-hover:text-dark-accent transition-colors">
+      <a href={`/projects/${slug}`} class="focus:outline-none">
+        <span class="absolute inset-0" aria-hidden="true"></span>
+        {title}
+      </a>
+    </h3>
+
+    <!-- Role subtitle -->
+    <p class="font-mono text-xs text-light-muted dark:text-dark-muted mt-1">
+      Role: <span class="text-light-text dark:text-dark-text">{role}</span>
+    </p>
+
+    <!-- 2-line Summary -->
+    <p class="text-xs sm:text-sm text-light-muted dark:text-dark-muted mt-3 line-clamp-2 leading-relaxed">
+      {summary}
+    </p>
+  </div>
+
+  <!-- Bottom: Tech Stack Tags & Direct Action Links -->
+  <div class="mt-6 pt-4 border-t border-light-border-subtle dark:border-dark-border-subtle flex flex-col gap-3">
+    <!-- Tech Stack Monospace Tags -->
+    <div class="flex flex-wrap gap-1.5">
+      {techStack.map((tech) => (
+        <span class="tech-tag bg-light-surface-hover dark:bg-dark-surface-hover text-light-muted dark:text-dark-muted border border-light-border dark:border-dark-border">
+          {tech}
+        </span>
+      ))}
+    </div>
+
+    <!-- Links row with high z-index to allow clicking outside article link -->
+    <div class="flex items-center justify-between pt-1 relative z-10 font-mono text-xs">
+      <a
+        href={`/projects/${slug}`}
+        class="inline-flex items-center gap-1 text-light-accent dark:text-dark-accent font-medium hover:underline"
+      >
+        <span>Case Study</span>
+        <span>→</span>
+      </a>
+
+      <div class="flex items-center gap-3">
+        {githubUrl && (
+          <a
+            href={githubUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-light-muted dark:text-dark-muted hover:text-light-text dark:hover:text-dark-text transition-colors flex items-center gap-1"
+            title="View Source Code"
+          >
+            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+            </svg>
+            <span>Repo</span>
+          </a>
+        )}
+
+        {liveUrl && (
+          <a
+            href={liveUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-light-muted dark:text-dark-muted hover:text-light-text dark:hover:text-dark-text transition-colors flex items-center gap-1"
+            title="Live Demo"
+          >
+            <span>Live ↗</span>
+          </a>
+        )}
+      </div>
+    </div>
+  </div>
+</article>

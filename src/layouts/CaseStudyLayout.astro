@@ -1,0 +1,140 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  title: string;
+  summary: string;
+  role: string;
+  category: string;
+  techStack: string[];
+  githubUrl?: string;
+  liveUrl?: string;
+  slug: string;
+}
+
+const {
+  title,
+  summary,
+  role,
+  category,
+  techStack,
+  githubUrl,
+  liveUrl,
+  slug,
+} = Astro.props;
+---
+
+<BaseLayout title={`${title} | Case Study`} description={summary} article={true}>
+  <article class="max-w-4xl mx-auto space-y-10">
+    <!-- Breadcrumb & Back button -->
+    <div class="flex items-center justify-between font-mono text-xs text-light-muted dark:text-dark-muted border-b border-light-border dark:border-dark-border pb-4">
+      <a
+        href="/projects"
+        class="inline-flex items-center gap-1 text-light-accent dark:text-dark-accent hover:underline"
+      >
+        <span>←</span>
+        <span>cd ../projects</span>
+      </a>
+
+      <div class="flex items-center gap-1.5 opacity-80 hidden sm:flex">
+        <span>~/habib.dev/projects/</span>
+        <span class="text-light-text dark:text-dark-text font-semibold">{slug}</span>
+      </div>
+    </div>
+
+    <!-- Case Study Meta Header -->
+    <header class="space-y-4">
+      <div class="flex items-center gap-2">
+        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded font-mono text-xs font-semibold bg-light-accent/10 dark:bg-dark-accent/10 text-light-accent dark:text-dark-accent border border-light-accent/20 dark:border-dark-accent/20">
+          <span>#</span>
+          <span>{category}</span>
+        </span>
+        <span class="text-xs font-mono text-light-muted dark:text-dark-muted">
+          ENGINEERING_CASE_STUDY
+        </span>
+      </div>
+
+      <h1 class="text-2xl sm:text-4xl font-bold tracking-tight text-light-text dark:text-dark-text leading-tight">
+        {title}
+      </h1>
+
+      <p class="text-base sm:text-lg text-light-muted dark:text-dark-muted leading-relaxed">
+        {summary}
+      </p>
+
+      <!-- Technical Metadata Specs Grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 rounded-lg border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface font-mono text-xs">
+        <div>
+          <span class="block text-light-muted dark:text-dark-muted text-[11px] uppercase">My Role</span>
+          <span class="font-semibold text-light-text dark:text-dark-text mt-0.5 block">{role}</span>
+        </div>
+        <div>
+          <span class="block text-light-muted dark:text-dark-muted text-[11px] uppercase">Category</span>
+          <span class="font-semibold text-light-text dark:text-dark-text mt-0.5 block">{category}</span>
+        </div>
+        <div>
+          <span class="block text-light-muted dark:text-dark-muted text-[11px] uppercase">Source Code</span>
+          {githubUrl ? (
+            <a href={githubUrl} target="_blank" rel="noopener noreferrer" class="text-light-accent dark:text-dark-accent hover:underline mt-0.5 block font-semibold">
+              GitHub Repo ↗
+            </a>
+          ) : (
+            <span class="text-light-muted dark:text-dark-muted mt-0.5 block">Private / Enterprise</span>
+          )}
+        </div>
+        <div>
+          <span class="block text-light-muted dark:text-dark-muted text-[11px] uppercase">Live Deployment</span>
+          {liveUrl ? (
+            <a href={liveUrl} target="_blank" rel="noopener noreferrer" class="text-light-accent dark:text-dark-accent hover:underline mt-0.5 block font-semibold">
+              Live Demo ↗
+            </a>
+          ) : (
+            <span class="text-light-muted dark:text-dark-muted mt-0.5 block">Internal Cluster</span>
+          )}
+        </div>
+      </div>
+
+      <!-- Tech Stack Badges -->
+      <div class="flex flex-wrap items-center gap-2 pt-2">
+        <span class="font-mono text-xs text-light-muted dark:text-dark-muted mr-1">Stack:</span>
+        {techStack.map((tech) => (
+          <span class="tech-tag bg-light-surface-hover dark:bg-dark-surface-hover text-light-text dark:text-dark-text border border-light-border dark:border-dark-border">
+            {tech}
+          </span>
+        ))}
+      </div>
+    </header>
+
+    <!-- Case Study Body (MDX Content) -->
+    <div class="prose prose-slate dark:prose-invert max-w-none 
+      prose-headings:font-semibold prose-headings:tracking-tight prose-headings:text-light-text dark:prose-headings:text-dark-text
+      prose-h2:text-xl prose-h2:border-b prose-h2:border-light-border dark:prose-h2:border-dark-border prose-h2:pb-2 prose-h2:mt-10
+      prose-p:text-light-text/90 dark:prose-p:text-dark-text/90 prose-p:leading-relaxed
+      prose-li:text-light-text/90 dark:prose-li:text-dark-text/90
+      prose-code:font-mono prose-code:text-light-accent dark:prose-code:text-dark-accent prose-code:bg-light-surface-hover dark:prose-code:bg-dark-surface-hover prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-xs
+      prose-pre:bg-light-surface dark:prose-pre:bg-dark-surface prose-pre:border prose-pre:border-light-border dark:prose-pre:border-dark-border prose-pre:text-light-text dark:prose-pre:text-dark-text prose-pre:font-mono prose-pre:text-xs prose-pre:p-4 prose-pre:rounded-lg
+      prose-table:border prose-table:border-light-border dark:prose-table:border-dark-border
+      prose-th:bg-light-surface-hover dark:prose-th:bg-dark-surface-hover prose-th:p-3 prose-th:text-xs prose-th:font-mono
+      prose-td:p-3 prose-td:text-xs prose-td:border-t prose-td:border-light-border dark:prose-td:border-dark-border">
+      <slot />
+    </div>
+
+    <!-- Navigation Footer in Case Study -->
+    <div class="border-t border-light-border dark:border-dark-border pt-8 flex items-center justify-between font-mono text-xs">
+      <a
+        href="/projects"
+        class="inline-flex items-center gap-1.5 px-4 py-2 rounded border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface text-light-text dark:text-dark-text hover:border-light-accent dark:hover:border-dark-accent transition-colors"
+      >
+        <span>←</span>
+        <span>Back to All Projects</span>
+      </a>
+
+      <a
+        href="#top"
+        class="text-light-muted dark:text-dark-muted hover:text-light-text dark:hover:text-dark-text transition-colors"
+      >
+        ↑ Back to Top
+      </a>
+    </div>
+  </article>
+</BaseLayout>

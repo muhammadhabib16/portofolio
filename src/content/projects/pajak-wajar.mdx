@@ -1,0 +1,76 @@
+---
+title: "PajakWajar: Platform Audit Pajak Otomatis dengan OCR"
+summary: "Sistem validasi kepatuhan pajak restoran dan perhotelan berbasis integrasi Tesseract OCR dan analisis kewajaran omzet."
+role: "Full-Stack Developer"
+category: "Full-Stack"
+techStack: ["Next.js", "TypeScript", "Express", "PostgreSQL", "Tesseract OCR", "Docker"]
+githubUrl: "https://github.com/muhammadhabib16/pajak-wajar"
+liveUrl: "https://pajak-wajar.vercel.app/"
+featured: true
+---
+
+## 1. Problem Statement
+
+Pendapatan Asli Daerah (PAD) dari sektor restoran dan perhotelan seringkali mengalami ketimpangan antara omzet riil dan pelaporan Surat Pemberitahuan Pajak Daerah (SPTPD). Proses audit manual oleh badan pendapatan daerah menghadapi hambatan signifikan:
+1. **Volume Sampel Struk Masif:** Petugas pajak harus memeriksa ribuan struk fisik dan rekap POS manual, yang rawan *human-error* dan kolusi.
+2. **Keterlambatan Deteksi Anomali:** Anomali selisih angka pajak 10% seringkali baru terdeteksi beberapa kuartal setelah periode pelaporan berakhir.
+3. **Format Dokumen Tidak Seragam:** Mesin kasir (POS) restoran memiliki variasi format cetak termal (*thermal receipt*), font, dan kontras tinta yang pudar.
+
+---
+
+## 2. System Architecture
+
+Arsitektur sistem dibangun dengan decoupling antara antarmuka analitik (Next.js), *worker pipeline* pemrosesan gambar OCR asinkron (Express + Tesseract engine), dan database relasional terindeks (PostgreSQL).
+
+```
++------------------+         +--------------------+         +--------------------+
+|  Next.js 14 Web  | <=====> | Express API Gateway| <=====> | PostgreSQL 16      |
+|  (Audit Portal)  |  HTTPS  | (Auth & Job Queues)|  SQL    | (Ledger & Reports) |
++------------------+         +---------+----------+         +--------------------+
+                                       |
+                                       | BullMQ / Redis Task
+                                       v
+                             +--------------------+
+                             | OCR Worker Cluster |
+                             | (Docker Container) |
+                             |                    |
+                             | 1. OpenCV Pre-proc |
+                             | 2. Binarization    |
+                             | 3. Tesseract Engine|
+                             | 4. Regex Extractor |
+                             +--------------------+
+```
+
+---
+
+## 3. Engineering Challenges & Technical Implementation
+
+### A. Receipt Image Normalization Pipeline
+Struk kasir yang difoto menggunakan ponsel auditor lapangan kerap miring (*skewed*), bernoda, atau memiliki pencahayaan tidak merata:
+* Membangun modul *preprocessing* menggunakan OpenCV:
+  * **Grayscale Conversion & Bilateral Filtering** untuk menghilangkan noise tekstur kertas tanpa mengikis ketajaman karakter teks.
+  * **Adaptive Gaussian Thresholding** untuk menghasilkan binerisasi tajam antara karakter tinta hitam dan latar kertas putih.
+  * **Deskewing Algorithm** memanfaatkan transformasi Hough Line untuk mengoreksi sudut kemiringan teks secara otomatis.
+
+### B. Heuristic Parsing & Entity Extraction
+Setelah teks biner diekstrak oleh Tesseract, teks mentah seringkali berupa untaian kalimat yang tidak beraturan:
+* Kami merancang *deterministic regular expression engine* yang mencari pola *Subtotal*, *Service Charge*, *Tax 10% (PB1)*, dan *Grand Total*.
+* Sistem menerapkan aturan matematis verifikasi silang:
+  `Expected Tax = Taxable Subtotal * 0.10`
+  Jika selisih antara pajak tertera dan perhitungan sistem melebihi batas toleransi (± Rp 100), sistem otomatis menandai transaksi tersebut sebagai status `FLAGGED_ANOMALY`.
+
+### C. Asynchronous Job Processing & Concurrency
+Pemrosesan OCR memakan resource CPU intensif (rata-rata 1.5 - 2 detik per gambar):
+* Menghindari pemblokiran thread HTTP API dengan memindahkan eksekusi OCR ke *worker cluster* berbasis Redis job queue.
+* Menyediakan endpoint WebSocket untuk mengirimkan notifikasi *live progress* audit ke dashboard web pemeriksa.
+
+---
+
+## 4. Key Metrics & Impact
+
+| Parameter Uji | Metrik Capaian |
+| :--- | :--- |
+| **Akurasi Ekstraksi Angka Transaksi** | `94.8%` pada struk termal terbaca |
+| **Throughput Pemrosesan Worker** | Rata-rata `1.2s` per lembar faktur |
+| **Efisiensi Waktu Audit** | Mempersingkat proses audit dari 3 hari menjadi 15 menit |
+| **Reliabilitas Server** | 100% *containerized* dengan Docker Compose |

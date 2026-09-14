@@ -1,0 +1,84 @@
+---
+title: "Siaga Padang: Navigasi Evakuasi Bencana Berbasis Spasial"
+summary: "Aplikasi mitigasi gempa & tsunami Kota Padang dengan routing spasial dan peta evakuasi offline independen sinyal telekomunikasi."
+role: "Lead Mobile & Spatial Engineer"
+category: "Data & GIS"
+techStack: ["Flutter", "Dart", "QGIS", "OpenStreetMap", "Spatial Routing", "SQLite"]
+githubUrl: "https://github.com/AkuSukaProject/siagapadang"
+featured: true
+---
+
+## 1. Problem Statement
+
+Kota Padang berada tepat di pesisir barat Pulau Sumatera yang berhadapan langsung dengan zona megathrust Mentawai. Ketika gempa bumi berkekuatan tinggi melanda, terdapat potensi tsunami dengan waktu evakuasi emas (*golden time*) kurang dari 25–30 menit.
+
+Kendala nyata di lapangan saat gempa besar terjadi:
+1. **Kegagalan Infrastruktur Telekomunikasi:** Menara BTS sering mengalami pemadaman listrik atau *congestion* parah, membuat aplikasi berbasis internet (seperti Google Maps online) tidak dapat digunakan.
+2. **Ketiadaan Rute Spasial Khusus Shelter:** Jalur evakuasi membutuhkan penentuan Titik Kumpul Sementara (TKS) atau Tempat Evakuasi Sementara (TES) terdekat berdasarkan kontur ketinggian dan kapasitas gedung ramah tsunami.
+3. **Keputusan Panik Warga:** Tanpa petunjuk arah deterministik, warga kerap terjebak kemacetan di arteri utama yang berisiko fatal.
+
+---
+
+## 2. System Architecture
+
+Sistem dirancang dengan filosofi **Offline-First Resilience**. Seluruh data vektor jalan raya, poligon zona bahaya tsunami (zona merah/kuning), dan koordinat TES dikompresi ke dalam basis data lokal SQLite berbasis ekstensi SpatiaLite/R-Tree indexing.
+
+```
++----------------------------------------------------------------+
+|                   MOBILE CLIENT (FLUTTER)                      |
+|                                                                |
+|  +------------------+   +-------------------+   +-----------+  |
+|  | Hardware Sensors |   | Offline MBTiles   |   | GPS Fix   |  |
+|  | (Compass/Accel)  |   | Vector Tile Cache |   | Engine    |  |
+|  +--------+---------+   +---------+---------+   +-----+-----+  |
+|           |                       |                   |        |
+|           v                       v                   v        |
+|  +----------------------------------------------------------+  |
+|  |         Dijkstra / A* Spatial Routing Engine (C++)       |  |
+|  |         Topological Road Network Graph in SQLite         |  |
+|  +----------------------------+-----------------------------+  |
+|                               |                                |
+|                               v                                |
+|  +----------------------------------------------------------+  |
+|  |            Dynamic Evacuation Vector Renderer            |  |
+|  +----------------------------------------------------------+  |
++----------------------------------------------------------------+
+                                ^
+                                | (Sync when network available)
++-------------------------------+--------------------------------+
+|                    SPATIAL DATA PIPELINE                       |
+|  +------------------+   +-------------------+   +-----------+  |
+|  | QGIS Validation  |-->| GeoJSON Topology  |-->| Flat SQLite| |
+|  | (Contour/Zones)  |   | Simplification    |   | Binary DB |  |
+|  +------------------+   +-------------------+   +-----------+  |
++----------------------------------------------------------------+
+```
+
+---
+
+## 3. Engineering Challenges & Technical Implementation
+
+### A. Graph Topology Simplification
+Mengonversi data jalan mentah OpenStreetMap (OSM) Kota Padang yang berukuran puluhan megabyte menjadi graf rute yang dapat dihitung dalam sub-detik pada perangkat *low-end Android*:
+* Menggunakan **QGIS** dan skrip Python untuk membersihkan *dangling nodes*, memastikan konektivitas topologis satu arah (*one-way roads*), serta membagi segmen jalan ke dalam bobot resistensi (lebar jalan, jembatan rentan roboh).
+* Mengimplementasikan algoritma **A\* Routing** dengan fungsi heuristik *Euclidean distance* yang dioptimasi untuk topologi jalan kota.
+
+### B. Offline Map Rendering Engine
+Alih-alih memuat raster tiles berbasis PNG yang boros memori penyimpanan, kami merancang *custom tile manager* yang membaca file *vector format*:
+* Mengompresi peta jalan seluruh zona pesisir Padang ke dalam file database tunggal berukuran kurang dari **35 MB**.
+* Rendering berbasis Canvas 60 FPS tanpa jeda (*stutter*), bahkan ketika perangkat dalam mode penerbangan (*Airplane Mode*).
+
+### C. Live Direction Heading with Sensor Fusion
+Ketika kepanikan terjadi, orientasi peta harus sinkron secara instan dengan arah hadap fisik pengguna:
+* Menggabungkan data dari sensor *magnetometer* dan *accelerometer* menggunakan *Low-pass filter* guna meminimalisasi noise medan magnet lokal.
+
+---
+
+## 4. Key Metrics & Impact
+
+| Metrik Kinerja | Hasil / Pengujian |
+| :--- | :--- |
+| **Waktu Perhitungan Rute Terdekat** | `< 120 ms` (pada Snapdragon 680) |
+| **Kebutuhan Akses Internet** | `0 KB` (100% fungsional luring) |
+| **Ukuran Paket Offline Asset** | `32.4 MB` (Vektor jalan + Zona TES) |
+| **Akurasi Penentuan Shelter** | 100% berbasis elevasi validasi BPBD |

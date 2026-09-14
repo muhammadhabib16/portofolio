@@ -1,0 +1,111 @@
+---
+const experiences = [
+  {
+    role: 'Mobile Developer & Staf Kesekretariatan',
+    organization: 'UKM Neo Telemetri — Padang',
+    period: 'Jan 2026 — Sekarang',
+    type: 'Organisasi & Rekayasa Mobile',
+    responsibilities: [
+      'Mengoordinasikan dan mengelola pemenuhan kebutuhan operasional dan administratif guna memastikan kelancaran seluruh program kerja UKM.',
+      'Berkontribusi langsung sebagai tim pengembang dalam perancangan dan pembuatan aplikasi mobile "Neo App".',
+      'Bertindak sebagai mentor teknis dalam Bootcamp Android Mobile Development, membimbing peserta dalam menguasai perancangan aplikasi menggunakan Kotlin dan Android Studio.',
+    ],
+    tech: ['Flutter', 'Kotlin', 'Android Studio', 'Mobile Architecture', 'Team Leadership'],
+  },
+  {
+    role: 'Mentor Mobile Developer',
+    organization: 'Metro Institute — Padang',
+    period: 'Sep 2026 — Sekarang',
+    type: 'Pendidikan & Mentoring Industri',
+    responsibilities: [
+      'Mengembangkan silabus terstruktur dan modul ajar komprehensif untuk memfasilitasi kelas Mobile Development.',
+      'Mengajar dan membimbing siswa dalam praktik implementasi state management, pemanggilan REST API, dan integrasi UI responsif menggunakan framework Flutter.',
+    ],
+    tech: ['Flutter', 'Dart', 'Curriculum Design', 'Technical Mentoring', 'Code Review'],
+  },
+  {
+    role: 'Staff Penelitian dan Pengembangan',
+    organization: 'Laboratorium System Development — Padang',
+    period: 'Aug 2025 — Sekarang',
+    type: 'Akademik & Riset Laboratorium',
+    responsibilities: [
+      'Merancang modul pembelajaran komprehensif sekaligus mengampu sesi praktikum untuk mata kuliah Dasar-Dasar Pemrograman dan Struktur Data & Algoritma.',
+      'Membangun infrastruktur digital laboratorium secara end-to-end dengan mengembangkan Website Profile interaktif dan Sistem Manajemen Jadwal Piket Asisten.',
+    ],
+    tech: ['Data Structures', 'Algorithm Design', 'Full-Stack Web', 'Laboratory Management'],
+  },
+  {
+    role: 'Full Stack Developer',
+    organization: 'Departemen Proteksi Tanaman — Universitas Andalas',
+    period: 'Nov 2025 — Feb 2026',
+    type: 'Pengembangan Web & Infrastruktur Server',
+    responsibilities: [
+      'Mengembangkan Website Profile Departemen Proteksi Tanaman secara komprehensif dari tahap arsitektur UI hingga backend data.',
+      'Mengeksekusi proses deployment ke server Universitas Andalas menggunakan arsitektur kontainer berbasis Docker di lingkungan Linux.',
+    ],
+    tech: ['Full-Stack Web', 'Docker', 'Linux Server', 'VPS Deployment', 'Containerization'],
+  },
+];
+---
+
+<section id="experience" class="space-y-6">
+  <div class="flex items-center justify-between border-b border-light-border dark:border-dark-border pb-3">
+    <div class="flex items-center gap-2">
+      <span class="font-mono text-xs text-light-accent dark:text-dark-accent">03.</span>
+      <h2 class="font-mono text-sm uppercase tracking-wider font-semibold text-light-text dark:text-dark-text">
+        Experience_&_Leadership_Timeline
+      </h2>
+    </div>
+    <span class="font-mono text-[11px] text-light-muted dark:text-dark-muted hidden sm:inline-block">
+      // academic, leadership & software engineering
+    </span>
+  </div>
+
+  <div class="relative border-l border-light-border dark:border-dark-border ml-3 sm:ml-4 pl-6 sm:pl-8 space-y-10">
+    {experiences.map((item) => (
+      <div class="relative group">
+        <!-- Dot marker on timeline -->
+        <span class="absolute -left-[31px] sm:-left-[39px] top-1.5 w-3.5 h-3.5 rounded-full border-2 border-light-bg dark:border-dark-bg bg-light-accent dark:bg-dark-accent"></span>
+
+        <!-- Content Card -->
+        <div class="p-5 rounded-lg border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface space-y-3">
+          <!-- Role & Period -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+            <h3 class="text-base font-semibold text-light-text dark:text-dark-text">
+              {item.role}
+            </h3>
+            <span class="font-mono text-xs text-light-accent dark:text-dark-accent bg-light-accent/10 dark:bg-dark-accent/10 px-2 py-0.5 rounded w-fit">
+              {item.period}
+            </span>
+          </div>
+
+          <!-- Organization & Type -->
+          <div class="flex items-center gap-2 text-xs font-mono text-light-muted dark:text-dark-muted">
+            <span class="font-medium text-light-text dark:text-dark-text">{item.organization}</span>
+            <span>•</span>
+            <span>{item.type}</span>
+          </div>
+
+          <!-- Responsibilities list -->
+          <ul class="space-y-1.5 text-xs sm:text-sm text-light-muted dark:text-dark-muted leading-relaxed">
+            {item.responsibilities.map((resp) => (
+              <li class="flex items-start gap-2">
+                <span class="text-light-accent dark:text-dark-accent mt-0.5">❯</span>
+                <span>{resp}</span>
+              </li>
+            ))}
+          </ul>
+
+          <!-- Tech / Skill tags -->
+          <div class="pt-2 flex flex-wrap gap-1.5 border-t border-light-border-subtle dark:border-dark-border-subtle">
+            {item.tech.map((t) => (
+              <span class="tech-tag bg-light-surface-hover dark:bg-dark-surface-hover text-light-muted dark:text-dark-muted border border-light-border dark:border-dark-border">
+                {t}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>

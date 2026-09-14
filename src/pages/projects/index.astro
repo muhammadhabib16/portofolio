@@ -1,0 +1,155 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+
+const allProjects = await getCollection('projects');
+// Sort featured first, then alphabetical
+const sortedProjects = allProjects.sort((a, b) => {
+  if (a.data.featured && !b.data.featured) return -1;
+  if (!a.data.featured && b.data.featured) return 1;
+  return a.data.title.localeCompare(b.data.title);
+});
+
+const categories = ['All', 'Full-Stack', 'Mobile', 'DevOps & Systems', 'Data & GIS'];
+---
+
+<BaseLayout
+  title="Technical Projects Archive | Muhammad Habib"
+  description="Daftar lengkap studi kasus rekayasa perangkat lunak, sistem web terdistribusi, mobile Flutter, dan geospasial GIS oleh Muhammad Habib."
+>
+  <div class="space-y-8">
+    <!-- Header Section -->
+    <header class="space-y-3 border-b border-light-border dark:border-dark-border pb-6">
+      <div class="flex items-center gap-2 font-mono text-xs text-light-accent dark:text-dark-accent">
+        <a href="/" class="hover:underline">~/habib.dev</a>
+        <span>/</span>
+        <span class="text-light-text dark:text-dark-text font-semibold">projects</span>
+      </div>
+
+      <h1 class="text-2xl sm:text-4xl font-bold tracking-tight text-light-text dark:text-dark-text">
+        Engineering Projects & Case Studies
+      </h1>
+
+      <p class="text-sm sm:text-base text-light-muted dark:text-dark-muted max-w-2xl leading-relaxed">
+        Kumpulan sistem perangkat lunak nyata yang dirancang dengan pertimbangan arsitektur mendalam, optimasi performa, dan studi kasus teknis end-to-end.
+      </p>
+    </header>
+
+    <!-- Category Filter Controls -->
+    <div class="flex flex-wrap items-center gap-2 font-mono text-xs">
+      <span class="text-light-muted dark:text-dark-muted mr-1">Filter:</span>
+      {categories.map((cat, idx) => (
+        <button
+          type="button"
+          class={`filter-btn px-3 py-1.5 rounded border transition-colors ${
+            idx === 0
+              ? 'active border-light-accent dark:border-dark-accent bg-light-accent/10 dark:bg-dark-accent/10 text-light-accent dark:text-dark-accent font-semibold'
+              : 'border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface text-light-muted dark:text-dark-muted hover:text-light-text dark:hover:text-dark-text'
+          }`}
+          data-filter={cat}
+        >
+          {cat === 'All' ? `[ ALL_PROJECTS (${sortedProjects.length}) ]` : cat}
+        </button>
+      ))}
+    </div>
+
+    <!-- Project Grid -->
+    <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+      {sortedProjects.map((project) => (
+        <div class="project-item" data-category={project.data.category}>
+          <ProjectCard
+            title={project.data.title}
+            summary={project.data.summary}
+            slug={project.slug}
+            category={project.data.category}
+            role={project.data.role}
+            techStack={project.data.techStack}
+            githubUrl={project.data.githubUrl}
+            liveUrl={project.data.liveUrl}
+            featured={project.data.featured}
+          />
+        </div>
+      ))}
+    </div>
+
+    <!-- Empty state (hidden by default) -->
+    <div id="empty-state" class="hidden p-12 text-center border border-dashed border-light-border dark:border-dark-border rounded-lg font-mono text-xs text-light-muted dark:text-dark-muted">
+      Tidak ada proyek pada kategori ini.
+    </div>
+  </div>
+</BaseLayout>
+
+<!-- Zero framework hydration: ultra-lightweight inline JS for instant client-side category filtering -->
+<script is:inline>
+  const filterButtons = document.querySelectorAll('.filter-btn');
+  const projectItems = document.querySelectorAll('.project-item');
+  const emptyState = document.getElementById('empty-state');
+
+  filterButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const selectedFilter = btn.getAttribute('data-filter');
+
+      // Update button active states
+      filterButtons.forEach((b) => {
+        b.classList.remove(
+          'active',
+          'border-light-accent',
+          'dark:border-dark-accent',
+          'bg-light-accent/10',
+          'dark:bg-dark-accent/10',
+          'text-light-accent',
+          'dark:text-dark-accent',
+          'font-semibold'
+        );
+        b.classList.add(
+          'border-light-border',
+          'dark:border-dark-border',
+          'bg-light-surface',
+          'dark:bg-dark-surface',
+          'text-light-muted',
+          'dark:text-dark-muted'
+        );
+      });
+
+      btn.classList.add(
+        'active',
+        'border-light-accent',
+        'dark:border-dark-accent',
+        'bg-light-accent/10',
+        'dark:bg-dark-accent/10',
+        'text-light-accent',
+        'dark:text-dark-accent',
+        'font-semibold'
+      );
+      btn.classList.remove(
+        'border-light-border',
+        'dark:border-dark-border',
+        'bg-light-surface',
+        'dark:bg-dark-surface',
+        'text-light-muted',
+        'dark:text-dark-muted'
+      );
+
+      // Filter projects
+      let visibleCount = 0;
+      projectItems.forEach((item) => {
+        const itemCat = item.getAttribute('data-category');
+        if (selectedFilter === 'All' || itemCat === selectedFilter) {
+          item.style.display = 'block';
+          visibleCount++;
+        } else {
+          item.style.display = 'none';
+        }
+      });
+
+      if (emptyState) {
+        if (visibleCount === 0) {
+          emptyState.classList.remove('hidden');
+        } else {
+          emptyState.classList.add('hidden');
+        }
+      }
+    });
+  });
+</script>

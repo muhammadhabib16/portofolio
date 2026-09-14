@@ -1,0 +1,86 @@
+---
+const awards = [
+  {
+    title: 'Juara 2 Hackathon CORE3D HIMA TEKKOM Universitas Andalas',
+    year: '2026',
+    category: 'Digital Innovation & Hackathon',
+    description:
+      'Berhasil merancang dan mengimplementasikan prototipe solusi digital aplikasi PERISAI (Aplikasi monitoring orang tua atas konten judi online di HP anak) dalam tenggat waktu kompetisi yang ketat.',
+    badge: '2nd Place Winner',
+    link: '/projects/perisai',
+  },
+  {
+    title: 'Finalis GEMASTIK 19 Divisi Pengembangan Perangkat Lunak',
+    year: '2026',
+    category: 'Nasional — Balai Pengembangan Talenta Indonesia (BPTI)',
+    description:
+      'Merancang dan mengembangkan Aplikasi SiagaPadang, Aplikasi Navigasi Evakuasi Tsunami berbasis routing spasial dan peta offline untuk wilayah pesisir Kota Padang.',
+    badge: 'National Finalist',
+    link: '/projects/siaga-padang',
+  },
+  {
+    title: 'Juara 3 OSNK Informatika (Komputer)',
+    year: '2022',
+    category: 'Olimpiade Sains Nasional Tingkat Kota/Kabupaten',
+    description:
+      'Kompetisi algoritma kompetitif, logika matematika diskrit, dan pemecahan masalah komputasional tingkat menengah atas.',
+    badge: '3rd Place Winner',
+  },
+];
+---
+
+<section id="awards" class="space-y-6">
+  <div class="flex items-center justify-between border-b border-light-border dark:border-dark-border pb-3">
+    <div class="flex items-center gap-2">
+      <span class="font-mono text-xs text-light-accent dark:text-dark-accent">04.</span>
+      <h2 class="font-mono text-sm uppercase tracking-wider font-semibold text-light-text dark:text-dark-text">
+        Honors_&_Achievements
+      </h2>
+    </div>
+    <span class="font-mono text-[11px] text-light-muted dark:text-dark-muted hidden sm:inline-block">
+      // competitive hackathons & olympiad
+    </span>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+    {awards.map((award) => (
+      <div class="flex flex-col justify-between p-5 rounded-lg border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface hover:border-light-accent/50 dark:hover:border-dark-accent/50 transition-colors">
+        <div>
+          <div class="flex items-center justify-between gap-2 mb-3">
+            <span class="inline-flex items-center gap-1 font-mono text-[11px] font-semibold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
+              <span>🏆</span>
+              <span>{award.badge}</span>
+            </span>
+            <span class="font-mono text-xs text-light-muted dark:text-dark-muted">
+              {award.year}
+            </span>
+          </div>
+
+          <h3 class="text-sm sm:text-base font-semibold text-light-text dark:text-dark-text leading-snug">
+            {award.title}
+          </h3>
+
+          <p class="font-mono text-[11px] text-light-accent dark:text-dark-accent mt-1">
+            {award.category}
+          </p>
+
+          <p class="text-xs text-light-muted dark:text-dark-muted mt-2.5 leading-relaxed">
+            {award.description}
+          </p>
+        </div>
+
+        {award.link && (
+          <div class="mt-4 pt-3 border-t border-light-border-subtle dark:border-dark-border-subtle">
+            <a
+              href={award.link}
+              class="font-mono text-xs text-light-accent dark:text-dark-accent hover:underline inline-flex items-center gap-1"
+            >
+              <span>Lihat Kasus Proyek</span>
+              <span>→</span>
+            </a>
+          </div>
+        )}
+      </div>
+    ))}
+  </div>
+</section>
