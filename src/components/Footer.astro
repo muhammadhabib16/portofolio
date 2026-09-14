@@ -2,46 +2,49 @@
 const currentYear = new Date().getFullYear();
 ---
 
-<footer class="mt-20 border-t border-light-border dark:border-dark-border bg-light-surface/40 dark:bg-dark-surface/40 transition-colors">
-  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-10">
-    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-light-muted dark:text-dark-muted">
+<footer class="mt-16 sm:mt-20 border-t border-light-border dark:border-dark-border bg-light-surface/40 dark:bg-dark-surface/40 transition-colors">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-5 sm:gap-4 font-mono text-xs text-light-muted dark:text-dark-muted text-center sm:text-left">
       <!-- Left side: Status badge & stack -->
-      <div class="flex items-center gap-3">
+      <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2.5">
         <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
           <span>SYSTEM_READY</span>
         </span>
-        <span>Astro 5 + Tailwind CSS + TypeScript</span>
+        <span class="text-light-border dark:text-dark-border hidden sm:inline">•</span>
+        <span>Astro 5 + Tailwind + TS</span>
       </div>
 
       <!-- Right side: Links & copyright -->
-      <div class="flex items-center gap-4">
-        <a
-          href="mailto:mhabibmhabib05@gmail.com"
-          class="hover:text-light-accent dark:hover:text-dark-accent transition-colors"
-        >
-          Email
-        </a>
-        <span class="text-light-border dark:text-dark-border">•</span>
-        <a
-          href="https://github.com/muhammadhabib16"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="hover:text-light-accent dark:hover:text-dark-accent transition-colors"
-        >
-          GitHub
-        </a>
-        <span class="text-light-border dark:text-dark-border">•</span>
-        <a
-          href="https://www.linkedin.com/in/muhammadhabib16/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="hover:text-light-accent dark:hover:text-dark-accent transition-colors"
-        >
-          LinkedIn
-        </a>
-        <span class="text-light-border dark:text-dark-border">•</span>
-        <span>© {currentYear} Muhammad Habib</span>
+      <div class="flex flex-col sm:flex-row items-center gap-2.5 sm:gap-4">
+        <div class="flex items-center gap-3 sm:gap-4">
+          <a
+            href="mailto:mhabibmhabib05@gmail.com"
+            class="hover:text-light-accent dark:hover:text-dark-accent transition-colors py-1"
+          >
+            Email
+          </a>
+          <span class="text-light-border dark:text-dark-border">•</span>
+          <a
+            href="https://github.com/muhammadhabib16"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hover:text-light-accent dark:hover:text-dark-accent transition-colors py-1"
+          >
+            GitHub
+          </a>
+          <span class="text-light-border dark:text-dark-border">•</span>
+          <a
+            href="https://www.linkedin.com/in/muhammadhabib16/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hover:text-light-accent dark:hover:text-dark-accent transition-colors py-1"
+          >
+            LinkedIn
+          </a>
+        </div>
+        <span class="text-light-border dark:text-dark-border hidden sm:inline">•</span>
+        <span class="opacity-80">© {currentYear} Muhammad Habib</span>
       </div>
     </div>
   </div>

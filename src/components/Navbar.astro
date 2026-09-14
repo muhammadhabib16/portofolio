@@ -23,13 +23,16 @@ const navLinks = [
       class="group flex items-center gap-2 font-mono text-sm tracking-tight font-semibold text-light-text dark:text-dark-text hover:text-light-accent dark:hover:text-dark-accent transition-colors"
     >
       <span class="text-light-accent dark:text-dark-accent">❯</span>
-      <span>~/muhammad-habib</span>
+      <!-- Compact brand name on mobile, full on sm+ -->
+      <span class="sm:hidden">~/habib</span>
+      <span class="hidden sm:inline">~/muhammad-habib</span>
       <span class="inline-block w-2 h-4 bg-light-accent dark:bg-dark-accent animate-pulse"></span>
     </a>
 
-    <!-- Navigation Links & Theme Toggle -->
-    <div class="flex items-center gap-1 sm:gap-2">
-      <nav class="flex items-center gap-1 sm:gap-2">
+    <!-- Right Side: Desktop Nav, Separator, Theme Switcher & Mobile Hamburger -->
+    <div class="flex items-center gap-2 sm:gap-3">
+      <!-- Desktop Navigation Links -->
+      <nav class="hidden md:flex items-center gap-1 sm:gap-2">
         {navLinks.map((link) => {
           const isActive = currentPath === link.href || (link.href !== '/' && currentPath.startsWith(link.href));
           return (
@@ -50,10 +53,128 @@ const navLinks = [
         })}
       </nav>
 
-      <div class="h-4 w-px bg-light-border dark:bg-dark-border mx-1"></div>
+      <div class="hidden md:block h-4 w-px bg-light-border dark:bg-dark-border"></div>
 
-      <!-- Theme Switcher -->
+      <!-- Theme Switcher (always visible) -->
       <ThemeToggle />
+
+      <!-- Mobile Hamburger Button -->
+      <button
+        id="mobile-menu-btn"
+        type="button"
+        class="md:hidden inline-flex items-center justify-center p-2 rounded-md text-light-muted dark:text-dark-muted hover:text-light-text dark:hover:text-dark-text hover:bg-light-surface-hover dark:hover:bg-dark-surface-hover border border-light-border dark:border-dark-border transition-colors focus:outline-none"
+        aria-label="Buka Menu Navigasi"
+        aria-expanded="false"
+        aria-controls="mobile-nav-panel"
+      >
+        <!-- Hamburger Icon -->
+        <svg id="menu-icon-open" class="w-4 h-4 block" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+        <!-- Close Icon -->
+        <svg id="menu-icon-close" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
     </div>
   </div>
+
+  <!-- Mobile Dropdown Navigation Panel -->
+  <div
+    id="mobile-nav-panel"
+    class="md:hidden hidden border-b border-light-border dark:border-dark-border bg-light-bg/95 dark:bg-dark-bg/95 backdrop-blur-xl px-4 pt-2 pb-4 space-y-1 shadow-lg transition-all"
+  >
+    <div class="font-mono text-[10px] uppercase tracking-wider text-light-muted dark:text-dark-muted px-3 py-1 mb-1 border-b border-light-border-subtle dark:border-dark-border-subtle flex items-center justify-between">
+      <span>// navigation_links</span>
+      <span class="text-[9px] text-light-accent dark:text-dark-accent">ESC_TO_CLOSE</span>
+    </div>
+
+    {navLinks.map((link) => {
+      const isActive = currentPath === link.href || (link.href !== '/' && currentPath.startsWith(link.href));
+      return (
+        <a
+          href={link.href}
+          target={link.external ? '_blank' : undefined}
+          rel={link.external ? 'noopener noreferrer' : undefined}
+          class={`mobile-nav-item flex items-center justify-between px-3.5 py-2.5 rounded-md font-mono text-sm font-medium transition-colors ${
+            isActive
+              ? 'text-light-accent dark:text-dark-accent bg-light-accent/10 dark:bg-dark-accent/10 font-semibold'
+              : 'text-light-muted dark:text-dark-muted hover:text-light-text dark:hover:text-dark-text hover:bg-light-surface-hover dark:hover:bg-dark-surface-hover'
+          }`}
+        >
+          <span class="flex items-center gap-2">
+            <span class={isActive ? 'text-light-accent dark:text-dark-accent' : 'opacity-40'}>❯</span>
+            <span>{link.name}</span>
+          </span>
+          {link.external ? (
+            <span class="text-xs opacity-70">↗ [PDF]</span>
+          ) : (
+            isActive && (
+              <span class="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-light-accent/20 dark:bg-dark-accent/20">
+                ACTIVE
+              </span>
+            )
+          )}
+        </a>
+      );
+    })}
+  </div>
 </header>
+
+<!-- Lightweight Zero-dependency Mobile Menu Handler -->
+<script is:inline>
+  (function () {
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    const navPanel = document.getElementById('mobile-nav-panel');
+    const iconOpen = document.getElementById('menu-icon-open');
+    const iconClose = document.getElementById('menu-icon-close');
+    const navItems = document.querySelectorAll('.mobile-nav-item');
+
+    if (!menuBtn || !navPanel) return;
+
+    function openMenu() {
+      navPanel.classList.remove('hidden');
+      menuBtn.setAttribute('aria-expanded', 'true');
+      iconOpen.classList.add('hidden');
+      iconClose.classList.remove('hidden');
+    }
+
+    function closeMenu() {
+      navPanel.classList.add('hidden');
+      menuBtn.setAttribute('aria-expanded', 'false');
+      iconOpen.classList.remove('hidden');
+      iconClose.classList.add('hidden');
+    }
+
+    menuBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      const isExpanded = menuBtn.getAttribute('aria-expanded') === 'true';
+      if (isExpanded) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    });
+
+    // Close when clicking any nav item
+    navItems.forEach(function (item) {
+      item.addEventListener('click', function () {
+        closeMenu();
+      });
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        closeMenu();
+      }
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', function (e) {
+      if (!navPanel.contains(e.target) && !menuBtn.contains(e.target)) {
+        closeMenu();
+      }
+    });
+  })();
+</script>

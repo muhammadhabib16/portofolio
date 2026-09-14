@@ -4,18 +4,30 @@ import CaseStudyLayout from '../../layouts/CaseStudyLayout.astro';
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
-  return projects.map((project) => ({
-    params: { slug: project.slug },
-    props: { project },
-  }));
+  const sortedProjects = projects.sort((a, b) => {
+    if (a.data.featured && !b.data.featured) return -1;
+    if (!a.data.featured && b.data.featured) return 1;
+    return a.data.title.localeCompare(b.data.title);
+  });
+
+  return sortedProjects.map((project, index) => {
+    const prevProject = index > 0 ? sortedProjects[index - 1] : null;
+    const nextProject = index < sortedProjects.length - 1 ? sortedProjects[index + 1] : null;
+    return {
+      params: { slug: project.slug },
+      props: { project, prevProject, nextProject },
+    };
+  });
 }
 
 interface Props {
   project: CollectionEntry<'projects'>;
+  prevProject: CollectionEntry<'projects'> | null;
+  nextProject: CollectionEntry<'projects'> | null;
 }
 
-const { project } = Astro.props;
-const { Content } = await project.render();
+const { project, prevProject, nextProject } = Astro.props;
+const { Content, headings } = await project.render();
 ---
 
 <CaseStudyLayout
@@ -27,6 +39,9 @@ const { Content } = await project.render();
   githubUrl={project.data.githubUrl}
   liveUrl={project.data.liveUrl}
   slug={project.slug}
+  headings={headings}
+  prevProject={prevProject ? { title: prevProject.data.title, slug: prevProject.slug, category: prevProject.data.category } : null}
+  nextProject={nextProject ? { title: nextProject.data.title, slug: nextProject.slug, category: nextProject.data.category } : null}
 >
   <Content />
 </CaseStudyLayout>

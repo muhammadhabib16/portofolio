@@ -25,7 +25,7 @@ const {
 ---
 
 <article
-  class="group relative flex flex-col justify-between p-5 sm:p-6 rounded-lg border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface hover:border-light-accent/50 dark:hover:border-dark-accent/50 transition-all duration-200"
+  class="group relative flex flex-col justify-between p-4 sm:p-6 rounded-lg border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface hover:border-light-accent/50 dark:hover:border-dark-accent/50 transition-all duration-200"
   data-category={category}
 >
   <div>
@@ -58,39 +58,39 @@ const {
     </p>
 
     <!-- 2-line Summary -->
-    <p class="text-xs sm:text-sm text-light-muted dark:text-dark-muted mt-3 line-clamp-2 leading-relaxed">
+    <p class="text-xs sm:text-sm text-light-muted dark:text-dark-muted mt-2.5 line-clamp-2 leading-relaxed">
       {summary}
     </p>
   </div>
 
   <!-- Bottom: Tech Stack Tags & Direct Action Links -->
-  <div class="mt-6 pt-4 border-t border-light-border-subtle dark:border-dark-border-subtle flex flex-col gap-3">
+  <div class="mt-5 pt-3.5 border-t border-light-border-subtle dark:border-dark-border-subtle flex flex-col gap-3">
     <!-- Tech Stack Monospace Tags -->
     <div class="flex flex-wrap gap-1.5">
       {techStack.map((tech) => (
-        <span class="tech-tag bg-light-surface-hover dark:bg-dark-surface-hover text-light-muted dark:text-dark-muted border border-light-border dark:border-dark-border">
+        <span class="tech-tag bg-light-surface-hover dark:bg-dark-surface-hover text-light-muted dark:text-dark-muted border border-light-border dark:border-dark-border text-[11px]">
           {tech}
         </span>
       ))}
     </div>
 
-    <!-- Links row with high z-index to allow clicking outside article link -->
+    <!-- Links row with high z-index and comfortable touch targets -->
     <div class="flex items-center justify-between pt-1 relative z-10 font-mono text-xs">
       <a
         href={`/projects/${slug}`}
-        class="inline-flex items-center gap-1 text-light-accent dark:text-dark-accent font-medium hover:underline"
+        class="inline-flex items-center gap-1 py-1 text-light-accent dark:text-dark-accent font-medium hover:underline"
       >
         <span>Case Study</span>
         <span>→</span>
       </a>
 
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-1.5 sm:gap-3">
         {githubUrl && (
           <a
             href={githubUrl}
             target="_blank"
             rel="noopener noreferrer"
-            class="text-light-muted dark:text-dark-muted hover:text-light-text dark:hover:text-dark-text transition-colors flex items-center gap-1"
+            class="text-light-muted dark:text-dark-muted hover:text-light-text dark:hover:text-dark-text transition-colors inline-flex items-center gap-1 py-1 px-2 rounded hover:bg-light-surface-hover dark:hover:bg-dark-surface-hover"
             title="View Source Code"
           >
             <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
@@ -105,7 +105,7 @@ const {
             href={liveUrl}
             target="_blank"
             rel="noopener noreferrer"
-            class="text-light-muted dark:text-dark-muted hover:text-light-text dark:hover:text-dark-text transition-colors flex items-center gap-1"
+            class="text-light-muted dark:text-dark-muted hover:text-light-text dark:hover:text-dark-text transition-colors inline-flex items-center gap-1 py-1 px-2 rounded hover:bg-light-surface-hover dark:hover:bg-dark-surface-hover"
             title="Live Demo"
           >
             <span>Live ↗</span>

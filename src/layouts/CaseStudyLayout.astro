@@ -10,6 +10,9 @@ interface Props {
   githubUrl?: string;
   liveUrl?: string;
   slug: string;
+  headings?: { depth: number; slug: string; text: string }[];
+  prevProject?: { title: string; slug: string; category: string } | null;
+  nextProject?: { title: string; slug: string; category: string } | null;
 }
 
 const {
@@ -21,120 +24,228 @@ const {
   githubUrl,
   liveUrl,
   slug,
+  headings = [],
+  prevProject,
+  nextProject,
 } = Astro.props;
+
+// Filter top-level H2 headings for section quick index
+const tocHeadings = headings.filter((h) => h.depth === 2);
 ---
 
-<BaseLayout title={`${title} | Case Study`} description={summary} article={true}>
-  <article class="max-w-4xl mx-auto space-y-10">
-    <!-- Breadcrumb & Back button -->
-    <div class="flex items-center justify-between font-mono text-xs text-light-muted dark:text-dark-muted border-b border-light-border dark:border-dark-border pb-4">
+<BaseLayout title={`${title} | Technical Case Study`} description={summary} article={true}>
+  <article class="max-w-4xl mx-auto space-y-8 sm:space-y-10 pt-2 sm:pt-4">
+    <!-- Breadcrumb & Top Navigation Bar -->
+    <div class="flex flex-wrap items-center justify-between gap-3 font-mono text-xs text-light-muted dark:text-dark-muted border-b border-light-border dark:border-dark-border pb-4">
       <a
         href="/projects"
-        class="inline-flex items-center gap-1 text-light-accent dark:text-dark-accent hover:underline"
+        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface text-light-text dark:text-dark-text hover:border-light-accent dark:hover:border-dark-accent hover:text-light-accent dark:hover:text-dark-accent transition-colors"
       >
         <span>←</span>
         <span>cd ../projects</span>
       </a>
 
-      <div class="flex items-center gap-1.5 opacity-80 hidden sm:flex">
-        <span>~/habib.dev/projects/</span>
-        <span class="text-light-text dark:text-dark-text font-semibold">{slug}</span>
+      <div class="flex items-center gap-2">
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 text-[11px] font-mono">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>PRODUCTION_VERIFIED</span>
+        </span>
+        <span class="text-light-border dark:text-dark-border hidden sm:inline">•</span>
+        <span class="hidden sm:inline opacity-80">projects/{slug}</span>
       </div>
     </div>
 
     <!-- Case Study Meta Header -->
-    <header class="space-y-4">
+    <header class="space-y-5">
       <div class="flex items-center gap-2">
-        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded font-mono text-xs font-semibold bg-light-accent/10 dark:bg-dark-accent/10 text-light-accent dark:text-dark-accent border border-light-accent/20 dark:border-dark-accent/20">
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded font-mono text-xs font-semibold bg-light-accent/10 dark:bg-dark-accent/10 text-light-accent dark:text-dark-accent border border-light-accent/20 dark:border-dark-accent/20">
           <span>#</span>
           <span>{category}</span>
         </span>
-        <span class="text-xs font-mono text-light-muted dark:text-dark-muted">
-          ENGINEERING_CASE_STUDY
+        <span class="text-xs font-mono text-light-muted dark:text-dark-muted uppercase tracking-wider">
+          TECHNICAL_CASE_STUDY
         </span>
       </div>
 
-      <h1 class="text-2xl sm:text-4xl font-bold tracking-tight text-light-text dark:text-dark-text leading-tight">
+      <h1 class="text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-light-text dark:text-dark-text leading-[1.15]">
         {title}
       </h1>
 
-      <p class="text-base sm:text-lg text-light-muted dark:text-dark-muted leading-relaxed">
-        {summary}
-      </p>
+      <!-- Highlighted Summary Callout -->
+      <div class="p-4 sm:p-5 rounded-lg border-l-4 border-l-light-accent dark:border-l-dark-accent border border-light-border dark:border-dark-border bg-light-surface/60 dark:bg-dark-surface/60">
+        <p class="text-sm sm:text-base text-light-muted dark:text-dark-muted leading-relaxed font-sans">
+          {summary}
+        </p>
+      </div>
 
       <!-- Technical Metadata Specs Grid -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 rounded-lg border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface font-mono text-xs">
-        <div>
-          <span class="block text-light-muted dark:text-dark-muted text-[11px] uppercase">My Role</span>
-          <span class="font-semibold text-light-text dark:text-dark-text mt-0.5 block">{role}</span>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <!-- Role -->
+        <div class="p-3.5 rounded-lg border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface font-mono text-xs">
+          <span class="block text-light-muted dark:text-dark-muted text-[10px] uppercase tracking-wider font-semibold">
+            [01] Role
+          </span>
+          <span class="font-semibold text-light-text dark:text-dark-text mt-1 block text-xs sm:text-sm">
+            {role}
+          </span>
         </div>
-        <div>
-          <span class="block text-light-muted dark:text-dark-muted text-[11px] uppercase">Category</span>
-          <span class="font-semibold text-light-text dark:text-dark-text mt-0.5 block">{category}</span>
+
+        <!-- Category -->
+        <div class="p-3.5 rounded-lg border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface font-mono text-xs">
+          <span class="block text-light-muted dark:text-dark-muted text-[10px] uppercase tracking-wider font-semibold">
+            [02] Architecture Domain
+          </span>
+          <span class="font-semibold text-light-text dark:text-dark-text mt-1 block text-xs sm:text-sm">
+            {category}
+          </span>
         </div>
-        <div>
-          <span class="block text-light-muted dark:text-dark-muted text-[11px] uppercase">Source Code</span>
+
+        <!-- Source Code -->
+        <div class="p-3.5 rounded-lg border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface font-mono text-xs">
+          <span class="block text-light-muted dark:text-dark-muted text-[10px] uppercase tracking-wider font-semibold">
+            [03] Source Code
+          </span>
           {githubUrl ? (
-            <a href={githubUrl} target="_blank" rel="noopener noreferrer" class="text-light-accent dark:text-dark-accent hover:underline mt-0.5 block font-semibold">
-              GitHub Repo ↗
+            <a
+              href={githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-light-accent dark:text-dark-accent hover:underline mt-1 inline-flex items-center gap-1 font-semibold text-xs sm:text-sm"
+            >
+              <span>GitHub Repo</span>
+              <span>↗</span>
             </a>
           ) : (
-            <span class="text-light-muted dark:text-dark-muted mt-0.5 block">Private / Enterprise</span>
+            <span class="text-light-muted dark:text-dark-muted mt-1 block text-xs sm:text-sm">
+              Private / Enterprise
+            </span>
           )}
         </div>
-        <div>
-          <span class="block text-light-muted dark:text-dark-muted text-[11px] uppercase">Live Deployment</span>
+
+        <!-- Deployment -->
+        <div class="p-3.5 rounded-lg border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface font-mono text-xs">
+          <span class="block text-light-muted dark:text-dark-muted text-[10px] uppercase tracking-wider font-semibold">
+            [04] Deployment
+          </span>
           {liveUrl ? (
-            <a href={liveUrl} target="_blank" rel="noopener noreferrer" class="text-light-accent dark:text-dark-accent hover:underline mt-0.5 block font-semibold">
-              Live Demo ↗
+            <a
+              href={liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-emerald-600 dark:text-emerald-400 hover:underline mt-1 inline-flex items-center gap-1.5 font-semibold text-xs sm:text-sm"
+            >
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span>Live Application ↗</span>
             </a>
           ) : (
-            <span class="text-light-muted dark:text-dark-muted mt-0.5 block">Internal Cluster</span>
+            <span class="text-light-muted dark:text-dark-muted mt-1 inline-flex items-center gap-1.5 text-xs sm:text-sm">
+              <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+              <span>Internal Cluster</span>
+            </span>
           )}
         </div>
       </div>
 
       <!-- Tech Stack Badges -->
-      <div class="flex flex-wrap items-center gap-2 pt-2">
-        <span class="font-mono text-xs text-light-muted dark:text-dark-muted mr-1">Stack:</span>
-        {techStack.map((tech) => (
-          <span class="tech-tag bg-light-surface-hover dark:bg-dark-surface-hover text-light-text dark:text-dark-text border border-light-border dark:border-dark-border">
-            {tech}
-          </span>
-        ))}
+      <div class="pt-1">
+        <div class="flex flex-wrap items-center gap-1.5">
+          <span class="font-mono text-xs text-light-muted dark:text-dark-muted mr-1">Tech Stack:</span>
+          {techStack.map((tech) => (
+            <span class="tech-tag bg-light-surface dark:bg-dark-surface text-light-text dark:text-dark-text border border-light-border dark:border-dark-border text-xs">
+              {tech}
+            </span>
+          ))}
+        </div>
       </div>
+
+      <!-- Quick Section Index / TOC -->
+      {tocHeadings.length > 0 && (
+        <div class="p-3.5 rounded-lg border border-light-border dark:border-dark-border bg-light-surface/40 dark:bg-dark-surface/40 space-y-2">
+          <div class="flex items-center gap-1.5 font-mono text-[11px] text-light-muted dark:text-dark-muted uppercase tracking-wider">
+            <span class="text-light-accent dark:text-dark-accent font-bold">❯</span>
+            <span>Document_Navigation:</span>
+          </div>
+          <div class="flex flex-wrap gap-2 font-mono text-xs">
+            {tocHeadings.map((h) => (
+              <a
+                href={`#${h.slug}`}
+                class="px-2.5 py-1 rounded bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border hover:border-light-accent dark:hover:border-dark-accent hover:text-light-accent dark:hover:text-dark-accent text-light-muted dark:text-dark-muted transition-colors text-[11px] sm:text-xs"
+              >
+                {h.text}
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
     </header>
 
-    <!-- Case Study Body (MDX Content) -->
-    <div class="prose prose-slate dark:prose-invert max-w-none 
-      prose-headings:font-semibold prose-headings:tracking-tight prose-headings:text-light-text dark:prose-headings:text-dark-text
-      prose-h2:text-xl prose-h2:border-b prose-h2:border-light-border dark:prose-h2:border-dark-border prose-h2:pb-2 prose-h2:mt-10
-      prose-p:text-light-text/90 dark:prose-p:text-dark-text/90 prose-p:leading-relaxed
-      prose-li:text-light-text/90 dark:prose-li:text-dark-text/90
-      prose-code:font-mono prose-code:text-light-accent dark:prose-code:text-dark-accent prose-code:bg-light-surface-hover dark:prose-code:bg-dark-surface-hover prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-xs
-      prose-pre:bg-light-surface dark:prose-pre:bg-dark-surface prose-pre:border prose-pre:border-light-border dark:prose-pre:border-dark-border prose-pre:text-light-text dark:prose-pre:text-dark-text prose-pre:font-mono prose-pre:text-xs prose-pre:p-4 prose-pre:rounded-lg
-      prose-table:border prose-table:border-light-border dark:prose-table:border-dark-border
-      prose-th:bg-light-surface-hover dark:prose-th:bg-dark-surface-hover prose-th:p-3 prose-th:text-xs prose-th:font-mono
-      prose-td:p-3 prose-td:text-xs prose-td:border-t prose-td:border-light-border dark:prose-td:border-dark-border">
+    <!-- Case Study Body (MDX Content with rich typography) -->
+    <div class="case-study-prose border-t border-light-border dark:border-dark-border pt-6">
       <slot />
     </div>
 
-    <!-- Navigation Footer in Case Study -->
-    <div class="border-t border-light-border dark:border-dark-border pt-8 flex items-center justify-between font-mono text-xs">
-      <a
-        href="/projects"
-        class="inline-flex items-center gap-1.5 px-4 py-2 rounded border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface text-light-text dark:text-dark-text hover:border-light-accent dark:hover:border-dark-accent transition-colors"
-      >
-        <span>←</span>
-        <span>Back to All Projects</span>
-      </a>
+    <!-- Bottom Navigation: Prev / Next Projects & Back -->
+    <div class="border-t border-light-border dark:border-dark-border pt-8 space-y-6">
+      <!-- Prev / Next Cards -->
+      {(prevProject || nextProject) && (
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {prevProject ? (
+            <a
+              href={`/projects/${prevProject.slug}`}
+              class="group p-4 rounded-lg border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface hover:border-light-accent dark:hover:border-dark-accent transition-all flex flex-col justify-between"
+            >
+              <span class="font-mono text-[10px] uppercase text-light-muted dark:text-dark-muted tracking-wider group-hover:text-light-accent dark:group-hover:text-dark-accent transition-colors">
+                ← Previous Project
+              </span>
+              <span class="text-sm font-semibold text-light-text dark:text-dark-text mt-1 group-hover:text-light-accent dark:group-hover:text-dark-accent transition-colors line-clamp-1">
+                {prevProject.title}
+              </span>
+              <span class="font-mono text-[10px] text-light-muted dark:text-dark-muted mt-2">
+                #{prevProject.category}
+              </span>
+            </a>
+          ) : (
+            <div class="hidden sm:block"></div>
+          )}
 
-      <a
-        href="#top"
-        class="text-light-muted dark:text-dark-muted hover:text-light-text dark:hover:text-dark-text transition-colors"
-      >
-        ↑ Back to Top
-      </a>
+          {nextProject && (
+            <a
+              href={`/projects/${nextProject.slug}`}
+              class="group p-4 rounded-lg border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface hover:border-light-accent dark:hover:border-dark-accent transition-all flex flex-col justify-between text-left sm:text-right"
+            >
+              <span class="font-mono text-[10px] uppercase text-light-muted dark:text-dark-muted tracking-wider group-hover:text-light-accent dark:group-hover:text-dark-accent transition-colors">
+                Next Project →
+              </span>
+              <span class="text-sm font-semibold text-light-text dark:text-dark-text mt-1 group-hover:text-light-accent dark:group-hover:text-dark-accent transition-colors line-clamp-1">
+                {nextProject.title}
+              </span>
+              <span class="font-mono text-[10px] text-light-muted dark:text-dark-muted mt-2">
+                #{nextProject.category}
+              </span>
+            </a>
+          )}
+        </div>
+      )}
+
+      <!-- Bottom Action Row -->
+      <div class="flex items-center justify-between font-mono text-xs pt-2">
+        <a
+          href="/projects"
+          class="inline-flex items-center gap-1.5 px-4 py-2 rounded border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface text-light-text dark:text-dark-text hover:border-light-accent dark:hover:border-dark-accent hover:text-light-accent dark:hover:text-dark-accent transition-colors"
+        >
+          <span>←</span>
+          <span>Semua Studi Kasus Proyek</span>
+        </a>
+
+        <a
+          href="#"
+          class="text-light-muted dark:text-dark-muted hover:text-light-accent dark:hover:text-dark-accent transition-colors flex items-center gap-1"
+        >
+          <span>↑</span>
+          <span>Kembali ke Atas</span>
+        </a>
+      </div>
     </div>
   </article>
 </BaseLayout>
+

@@ -30,21 +30,21 @@ const awards = [
 ---
 
 <section id="awards" class="space-y-6">
-  <div class="flex items-center justify-between border-b border-light-border dark:border-dark-border pb-3">
-    <div class="flex items-center gap-2">
-      <span class="font-mono text-xs text-light-accent dark:text-dark-accent">04.</span>
-      <h2 class="font-mono text-sm uppercase tracking-wider font-semibold text-light-text dark:text-dark-text">
+  <div class="flex items-center justify-between gap-2 border-b border-light-border dark:border-dark-border pb-3">
+    <div class="flex items-center gap-2 min-w-0">
+      <span class="font-mono text-xs text-light-accent dark:text-dark-accent flex-shrink-0">04.</span>
+      <h2 class="font-mono text-xs sm:text-sm uppercase tracking-wider font-semibold text-light-text dark:text-dark-text truncate">
         Honors_&_Achievements
       </h2>
     </div>
-    <span class="font-mono text-[11px] text-light-muted dark:text-dark-muted hidden sm:inline-block">
-      // competitive hackathons & olympiad
+    <span class="font-mono text-[11px] text-light-muted dark:text-dark-muted hidden sm:inline-block flex-shrink-0">
+      // achievements
     </span>
   </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
     {awards.map((award) => (
-      <div class="flex flex-col justify-between p-5 rounded-lg border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface hover:border-light-accent/50 dark:hover:border-dark-accent/50 transition-colors">
+      <div class="flex flex-col justify-between p-4 sm:p-5 rounded-lg border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface hover:border-light-accent/50 dark:hover:border-dark-accent/50 transition-colors">
         <div>
           <div class="flex items-center justify-between gap-2 mb-3">
             <span class="inline-flex items-center gap-1 font-mono text-[11px] font-semibold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
@@ -73,7 +73,7 @@ const awards = [
           <div class="mt-4 pt-3 border-t border-light-border-subtle dark:border-dark-border-subtle">
             <a
               href={award.link}
-              class="font-mono text-xs text-light-accent dark:text-dark-accent hover:underline inline-flex items-center gap-1"
+              class="font-mono text-xs text-light-accent dark:text-dark-accent hover:underline inline-flex items-center gap-1 py-1"
             >
               <span>Lihat Kasus Proyek</span>
               <span>→</span>

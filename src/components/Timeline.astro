@@ -49,38 +49,38 @@ const experiences = [
 ---
 
 <section id="experience" class="space-y-6">
-  <div class="flex items-center justify-between border-b border-light-border dark:border-dark-border pb-3">
-    <div class="flex items-center gap-2">
-      <span class="font-mono text-xs text-light-accent dark:text-dark-accent">03.</span>
-      <h2 class="font-mono text-sm uppercase tracking-wider font-semibold text-light-text dark:text-dark-text">
+  <div class="flex items-center justify-between gap-2 border-b border-light-border dark:border-dark-border pb-3">
+    <div class="flex items-center gap-2 min-w-0">
+      <span class="font-mono text-xs text-light-accent dark:text-dark-accent flex-shrink-0">03.</span>
+      <h2 class="font-mono text-xs sm:text-sm uppercase tracking-wider font-semibold text-light-text dark:text-dark-text truncate">
         Experience_&_Leadership_Timeline
       </h2>
     </div>
-    <span class="font-mono text-[11px] text-light-muted dark:text-dark-muted hidden sm:inline-block">
-      // academic, leadership & software engineering
+    <span class="font-mono text-[11px] text-light-muted dark:text-dark-muted hidden sm:inline-block flex-shrink-0">
+      // timeline
     </span>
   </div>
 
-  <div class="relative border-l border-light-border dark:border-dark-border ml-3 sm:ml-4 pl-6 sm:pl-8 space-y-10">
+  <div class="relative border-l border-light-border dark:border-dark-border ml-2.5 sm:ml-4 pl-5 sm:pl-8 space-y-6 sm:space-y-10">
     {experiences.map((item) => (
       <div class="relative group">
-        <!-- Dot marker on timeline -->
-        <span class="absolute -left-[31px] sm:-left-[39px] top-1.5 w-3.5 h-3.5 rounded-full border-2 border-light-bg dark:border-dark-bg bg-light-accent dark:bg-dark-accent"></span>
+        <!-- Dot marker on timeline: precisely aligned with border on both mobile and desktop -->
+        <span class="absolute -left-[27px] sm:-left-[39px] top-2 w-3.5 h-3.5 rounded-full border-2 border-light-bg dark:border-dark-bg bg-light-accent dark:bg-dark-accent"></span>
 
         <!-- Content Card -->
-        <div class="p-5 rounded-lg border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface space-y-3">
+        <div class="p-4 sm:p-5 rounded-lg border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface space-y-3">
           <!-- Role & Period -->
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-            <h3 class="text-base font-semibold text-light-text dark:text-dark-text">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
+            <h3 class="text-sm sm:text-base font-semibold text-light-text dark:text-dark-text">
               {item.role}
             </h3>
-            <span class="font-mono text-xs text-light-accent dark:text-dark-accent bg-light-accent/10 dark:bg-dark-accent/10 px-2 py-0.5 rounded w-fit">
+            <span class="font-mono text-[11px] sm:text-xs text-light-accent dark:text-dark-accent bg-light-accent/10 dark:bg-dark-accent/10 px-2 py-0.5 rounded w-fit">
               {item.period}
             </span>
           </div>
 
           <!-- Organization & Type -->
-          <div class="flex items-center gap-2 text-xs font-mono text-light-muted dark:text-dark-muted">
+          <div class="flex flex-wrap items-center gap-1.5 text-xs font-mono text-light-muted dark:text-dark-muted">
             <span class="font-medium text-light-text dark:text-dark-text">{item.organization}</span>
             <span>•</span>
             <span>{item.type}</span>
@@ -90,7 +90,7 @@ const experiences = [
           <ul class="space-y-1.5 text-xs sm:text-sm text-light-muted dark:text-dark-muted leading-relaxed">
             {item.responsibilities.map((resp) => (
               <li class="flex items-start gap-2">
-                <span class="text-light-accent dark:text-dark-accent mt-0.5">❯</span>
+                <span class="text-light-accent dark:text-dark-accent mt-0.5 flex-shrink-0">❯</span>
                 <span>{resp}</span>
               </li>
             ))}
@@ -99,7 +99,7 @@ const experiences = [
           <!-- Tech / Skill tags -->
           <div class="pt-2 flex flex-wrap gap-1.5 border-t border-light-border-subtle dark:border-dark-border-subtle">
             {item.tech.map((t) => (
-              <span class="tech-tag bg-light-surface-hover dark:bg-dark-surface-hover text-light-muted dark:text-dark-muted border border-light-border dark:border-dark-border">
+              <span class="tech-tag bg-light-surface-hover dark:bg-dark-surface-hover text-light-muted dark:text-dark-muted border border-light-border dark:border-dark-border text-[11px]">
                 {t}
               </span>
             ))}

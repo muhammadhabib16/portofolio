@@ -40,21 +40,21 @@ const techGroups = [
 ---
 
 <section id="skills" class="space-y-6">
-  <div class="flex items-center justify-between border-b border-light-border dark:border-dark-border pb-3">
-    <div class="flex items-center gap-2">
-      <span class="font-mono text-xs text-light-accent dark:text-dark-accent">02.</span>
-      <h2 class="font-mono text-sm uppercase tracking-wider font-semibold text-light-text dark:text-dark-text">
+  <div class="flex items-center justify-between gap-2 border-b border-light-border dark:border-dark-border pb-3">
+    <div class="flex items-center gap-2 min-w-0">
+      <span class="font-mono text-xs text-light-accent dark:text-dark-accent flex-shrink-0">02.</span>
+      <h2 class="font-mono text-xs sm:text-sm uppercase tracking-wider font-semibold text-light-text dark:text-dark-text truncate">
         Tech_Stack_Matrix
       </h2>
     </div>
-    <span class="font-mono text-[11px] text-light-muted dark:text-dark-muted hidden sm:inline-block">
-      // no progress bars, pure capabilities
+    <span class="font-mono text-[11px] text-light-muted dark:text-dark-muted hidden sm:inline-block flex-shrink-0">
+      // capabilities
     </span>
   </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
     {techGroups.map((group) => (
-      <div class="flex flex-col p-5 rounded-lg border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface">
+      <div class="flex flex-col p-4 sm:p-5 rounded-lg border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface">
         <div class="mb-4">
           <h3 class="font-mono text-sm font-semibold text-light-text dark:text-dark-text flex items-center gap-2">
             <span class="text-light-accent dark:text-dark-accent font-bold">#</span>

@@ -36,22 +36,27 @@ const categories = ['All', 'Full-Stack', 'Mobile', 'DevOps & Systems', 'Data & G
       </p>
     </header>
 
-    <!-- Category Filter Controls -->
-    <div class="flex flex-wrap items-center gap-2 font-mono text-xs">
-      <span class="text-light-muted dark:text-dark-muted mr-1">Filter:</span>
-      {categories.map((cat, idx) => (
-        <button
-          type="button"
-          class={`filter-btn px-3 py-1.5 rounded border transition-colors ${
-            idx === 0
-              ? 'active border-light-accent dark:border-dark-accent bg-light-accent/10 dark:bg-dark-accent/10 text-light-accent dark:text-dark-accent font-semibold'
-              : 'border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface text-light-muted dark:text-dark-muted hover:text-light-text dark:hover:text-dark-text'
-          }`}
-          data-filter={cat}
-        >
-          {cat === 'All' ? `[ ALL_PROJECTS (${sortedProjects.length}) ]` : cat}
-        </button>
-      ))}
+    <!-- Category Filter Controls with smooth horizontal swipe on mobile -->
+    <div class="space-y-2">
+      <div class="flex items-center gap-1.5 font-mono text-xs text-light-muted dark:text-dark-muted">
+        <span class="text-light-accent dark:text-dark-accent">❯</span>
+        <span>Filter_By_Category:</span>
+      </div>
+      <div class="flex items-center gap-2 overflow-x-auto pb-2 pt-0.5 no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap">
+        {categories.map((cat, idx) => (
+          <button
+            type="button"
+            class={`filter-btn flex-shrink-0 px-3 py-1.5 rounded-md border text-xs font-mono transition-colors whitespace-nowrap ${
+              idx === 0
+                ? 'active border-light-accent dark:border-dark-accent bg-light-accent/10 dark:bg-dark-accent/10 text-light-accent dark:text-dark-accent font-semibold'
+                : 'border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface text-light-muted dark:text-dark-muted hover:text-light-text dark:hover:text-dark-text'
+            }`}
+            data-filter={cat}
+          >
+            {cat === 'All' ? `[ ALL (${sortedProjects.length}) ]` : cat}
+          </button>
+        ))}
+      </div>
     </div>
 
     <!-- Project Grid -->
