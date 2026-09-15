@@ -5,14 +5,14 @@ interface Props {
   title: string;
   summary: string;
   role: string;
-  category: string;
+  category: string | string[];
   techStack: string[];
   githubUrl?: string;
   liveUrl?: string;
   slug: string;
   headings?: { depth: number; slug: string; text: string }[];
-  prevProject?: { title: string; slug: string; category: string } | null;
-  nextProject?: { title: string; slug: string; category: string } | null;
+  prevProject?: { title: string; slug: string; category: string | string[] } | null;
+  nextProject?: { title: string; slug: string; category: string | string[] } | null;
 }
 
 const {
@@ -28,6 +28,8 @@ const {
   prevProject,
   nextProject,
 } = Astro.props;
+
+const categories = Array.isArray(category) ? category : [category];
 
 // Filter top-level H2 headings for section quick index
 const tocHeadings = headings.filter((h) => h.depth === 2);
@@ -57,11 +59,13 @@ const tocHeadings = headings.filter((h) => h.depth === 2);
 
     <!-- Case Study Meta Header -->
     <header class="space-y-5">
-      <div class="flex items-center gap-2">
-        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded font-mono text-xs font-semibold bg-light-accent/10 dark:bg-dark-accent/10 text-light-accent dark:text-dark-accent border border-light-accent/20 dark:border-dark-accent/20">
-          <span>#</span>
-          <span>{category}</span>
-        </span>
+      <div class="flex items-center gap-2 flex-wrap">
+        {categories.map((cat) => (
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded font-mono text-xs font-semibold bg-light-accent/10 dark:bg-dark-accent/10 text-light-accent dark:text-dark-accent border border-light-accent/20 dark:border-dark-accent/20">
+            <span>#</span>
+            <span>{cat}</span>
+          </span>
+        ))}
         <span class="text-xs font-mono text-light-muted dark:text-dark-muted uppercase tracking-wider">
           TECHNICAL_CASE_STUDY
         </span>
@@ -96,7 +100,7 @@ const tocHeadings = headings.filter((h) => h.depth === 2);
             [02] Architecture Domain
           </span>
           <span class="font-semibold text-light-text dark:text-dark-text mt-1 block text-xs sm:text-sm">
-            {category}
+            {categories.join(' & ')}
           </span>
         </div>
 
@@ -201,7 +205,7 @@ const tocHeadings = headings.filter((h) => h.depth === 2);
                 {prevProject.title}
               </span>
               <span class="font-mono text-[10px] text-light-muted dark:text-dark-muted mt-2">
-                #{prevProject.category}
+                #{Array.isArray(prevProject.category) ? prevProject.category.join(' / #') : prevProject.category}
               </span>
             </a>
           ) : (
@@ -220,7 +224,7 @@ const tocHeadings = headings.filter((h) => h.depth === 2);
                 {nextProject.title}
               </span>
               <span class="font-mono text-[10px] text-light-muted dark:text-dark-muted mt-2">
-                #{nextProject.category}
+                #{Array.isArray(nextProject.category) ? nextProject.category.join(' / #') : nextProject.category}
               </span>
             </a>
           )}

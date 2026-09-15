@@ -3,7 +3,7 @@ interface Props {
   title: string;
   summary: string;
   slug: string;
-  category: string;
+  category: string | string[];
   role: string;
   techStack: string[];
   githubUrl?: string;
@@ -22,22 +22,29 @@ const {
   liveUrl,
   featured = false,
 } = Astro.props;
+
+const categories = Array.isArray(category) ? category : [category];
+const categoryString = categories.join(',');
 ---
 
 <article
   class="group relative flex flex-col justify-between p-4 sm:p-6 rounded-lg border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface hover:border-light-accent/50 dark:hover:border-dark-accent/50 transition-all duration-200"
-  data-category={category}
+  data-category={categoryString}
 >
   <div>
     <!-- Top Metadata Header: Category & Role -->
     <div class="flex items-center justify-between gap-2 mb-3">
-      <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded font-mono text-[11px] font-medium bg-light-surface-hover dark:bg-dark-surface-hover text-light-accent dark:text-dark-accent border border-light-border dark:border-dark-border">
-        <span>#</span>
-        <span>{category}</span>
-      </span>
+      <div class="flex items-center gap-1.5 flex-wrap">
+        {categories.map((cat) => (
+          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded font-mono text-[11px] font-medium bg-light-surface-hover dark:bg-dark-surface-hover text-light-accent dark:text-dark-accent border border-light-border dark:border-dark-border">
+            <span>#</span>
+            <span>{cat}</span>
+          </span>
+        ))}
+      </div>
 
       {featured && (
-        <span class="inline-flex items-center gap-1 text-[11px] font-mono text-amber-600 dark:text-amber-400 font-semibold">
+        <span class="inline-flex items-center gap-1 text-[11px] font-mono text-amber-600 dark:text-amber-400 font-semibold flex-shrink-0">
           <span>★</span>
           <span>FEATURED</span>
         </span>

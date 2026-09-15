@@ -61,21 +61,26 @@ const categories = ['All', 'Full-Stack', 'Mobile', 'DevOps & Systems', 'Data & G
 
     <!-- Project Grid -->
     <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 gap-5">
-      {sortedProjects.map((project) => (
-        <div class="project-item" data-category={project.data.category}>
-          <ProjectCard
-            title={project.data.title}
-            summary={project.data.summary}
-            slug={project.slug}
-            category={project.data.category}
-            role={project.data.role}
-            techStack={project.data.techStack}
-            githubUrl={project.data.githubUrl}
-            liveUrl={project.data.liveUrl}
-            featured={project.data.featured}
-          />
-        </div>
-      ))}
+      {sortedProjects.map((project) => {
+        const projectCats = Array.isArray(project.data.category)
+          ? project.data.category
+          : [project.data.category];
+        return (
+          <div class="project-item" data-category={projectCats.join(',')}>
+            <ProjectCard
+              title={project.data.title}
+              summary={project.data.summary}
+              slug={project.slug}
+              category={project.data.category}
+              role={project.data.role}
+              techStack={project.data.techStack}
+              githubUrl={project.data.githubUrl}
+              liveUrl={project.data.liveUrl}
+              featured={project.data.featured}
+            />
+          </div>
+        );
+      })}
     </div>
 
     <!-- Empty state (hidden by default) -->
@@ -136,11 +141,12 @@ const categories = ['All', 'Full-Stack', 'Mobile', 'DevOps & Systems', 'Data & G
         'dark:text-dark-muted'
       );
 
-      // Filter projects
+      // Filter projects with multi-category support
       let visibleCount = 0;
       projectItems.forEach((item) => {
-        const itemCat = item.getAttribute('data-category');
-        if (selectedFilter === 'All' || itemCat === selectedFilter) {
+        const itemCat = item.getAttribute('data-category') || '';
+        const itemCats = itemCat.split(',').map((c) => c.trim());
+        if (selectedFilter === 'All' || itemCats.includes(selectedFilter)) {
           item.style.display = 'block';
           visibleCount++;
         } else {
